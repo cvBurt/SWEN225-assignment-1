@@ -5,6 +5,7 @@ public class Cell {
 	Cell southNeighbour;
 	Cell westNeighbour;
 	String room;
+	String draw;
 	
 	public Cell(Cell north, Cell east, Cell south, Cell west, String room) {
 		this.northNeighbour = north;
@@ -12,6 +13,10 @@ public class Cell {
 		this.southNeighbour = south;
 		this.westNeighbour = west;
 		this.room = room;
+	}
+	
+	public Cell(String draw) {
+		this.draw = draw;
 	}
 
 	public Cell getNorthNeighbour() {
@@ -29,7 +34,11 @@ public class Cell {
 	public Cell getWestNeighbour() {
 		return westNeighbour;
 	}
-
+	
+	public void setRoom(String room) {
+		this.room = room;
+	}
+	
 	public String getRoom() {
 		return room;
 	}
