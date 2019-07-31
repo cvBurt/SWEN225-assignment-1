@@ -2,40 +2,23 @@ import java.util.*;
 
 public class Player {
 	String name;
-	List<Card> hand = new ArrayList<Card>();
-	List<Card> checkList;
+	List<Card> hand;
+	Cell location;
 	
-	
-	public Player (String character, List<Card> hand) {
+	public Player (String character) {
 		this.name = character;
-		this.hand = hand;
-		this.checkList = hand;
+		this.hand = new ArrayList<Card>();
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public List<Card> getHand() {
 		return hand;
 	}
 
-	public void setHand(List<Card> hand) {
-		this.hand = hand;
+	public void addCardToHand(Card card) {
+		this.hand.add(card);
 	}
-
-	public List<Card> getCheckList() {
-		return checkList;
-	}
-
-	public void setCheckList(List<Card> checkList) {
-		this.checkList = checkList;
-	}
-	
-	
-
 }
