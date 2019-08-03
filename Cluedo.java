@@ -60,7 +60,17 @@ public class Cluedo {
 				allCards.remove(0);
 			}
 		}
-		//board.draw();
+		
+		System.out.println("Take turns noting down the cards that have been delt to each player. (keep them secret to you!!");
+		for(Player player : players) {
+			System.out.println(player.getName() + " when ready press 'y' to display your hand");
+			if(sc.next().equalsIgnoreCase("y")) {
+				System.out.println(player.showHand());
+				System.out.println("(When ready press 'y' to hide your hand again");
+				if(sc.next().equalsIgnoreCase("y")) System.out.flush();
+			}
+		}
+		
 		tick(sc);
 	}
 	
