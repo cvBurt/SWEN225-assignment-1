@@ -10,6 +10,8 @@ public class Cluedo {
 	private Card murderRoom;
 	private Board board;
 	private Player currentPlayer;
+	private String winningClaim;
+	private boolean wonFromAccu;
 	
 	public Cluedo (){
 		board = new Board();
@@ -20,7 +22,7 @@ public class Cluedo {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Hello, welcome to cluedo\n"
 				+ "if at any time you need clarifiction on the\n"
-				+ "rules type '4' for a list of the rules\n\n");
+				+ "rules type \"4\" for a list of the rules\n\n");
 		setup(sc);
 	}
 	
@@ -70,13 +72,38 @@ public class Cluedo {
 		int playerTurn = 0;
 		while(true) {
 			//board.draw();
-			currentPlayer = players.get(0);
-			System.out.println("It is " + currentPlayer.getName() + "'s turn press enter to roll the dice");
-			
-			
-			playerTurn++;
-			if(playerTurn == players.size()) playerTurn = 0;
+			currentPlayer = players.get(playerTurn);
+			System.out.println("It is " + currentPlayer.getName() + "'s are you ready for your turn?(y/n)");
+			if(sc.next().equalsIgnoreCase("y")  ) {
+				System.out.println("Do you want to roll the dice?(y/n)");
+				if(sc.next().equalsIgnoreCase("y")) {
+					int roll = rollDice();
+					System.out.println("You rolled " + roll + "! whats your move?");
+					if(sc.nextLine() != null) {
+						applyMove(sc.nextLine(),sc);
+					}
+				}
+				if(!currentPlayer.getLocation().getRoom().equals("hallway")) {
+					System.out.println("Would you like to make a suggestion or accusation?(please state)");
+					if(sc.next().equalsIgnoreCase("suggestion")) {
+						if(checkSuggestion(sc)) {
+							break;
+						}
+					}
+					else if(sc.next().equalsIgnoreCase("accusation")) {
+						if(checkAccusation(sc)) {
+							break;
+						}
+						System.out.println(currentPlayer+ " is now out of the game due to an incorrect accusation");
+						players.remove(currentPlayer);
+					}
+				}
+				playerTurn++;
+				if(playerTurn == players.size()) playerTurn = 0;
+			}
 		}
+		if(wonFromAccu) System.out.println(currentPlayer.getName() + "won the game with the accusation: " + winningClaim);
+		else System.out.println(currentPlayer.getName() + "won the game with the suggestion: " + winningClaim);
 	}
 	
 	/**
@@ -140,11 +167,256 @@ public class Cluedo {
 		rooms.add(new Card("room","Study"));
 	}
 	
+	/**
+	 * generates to random integers between 1 and 6 and adds them together
+	 * @return
+	 */
+	public int rollDice() {
+		Random rand = new Random();
+		return (rand.nextInt(6)+1) + (rand.nextInt(6)+1);
+	}
+	
+	public void applyMove(String move, Scanner sc) {
+		
+	}
+	
+	/**
+	 * checks whether the given suggestion is correct or not, making sure that the suggestion is done in
+	 * the correct format at the same time
+	 * @param sc
+	 * @return
+	 */
+	public boolean checkSuggestion(Scanner sc) {
+		System.out.println("(Please make the suggestion in the format \"Person, Weapon, Room\")");
+		while(true) {
+			String[] suggestion = sc.nextLine().split(",");
+			if(isValidSuggestion(suggestion)) {
+				if(murderer.getId().equalsIgnoreCase(suggestion[0])) {
+					if(murderWeapon.getId().equalsIgnoreCase(suggestion[1])) {
+						if(murderRoom.getId().equalsIgnoreCase(suggestion[2])) {
+							winningClaim = Arrays.toString(suggestion);
+							wonFromAccu = false;
+							return true;
+						}
+						else {
+							refuteRoom(suggestion[2], sc);
+							break;
+						}
+					}
+					else {
+						refuteWeapon(suggestion[1], sc);
+						break;
+					}
+				}
+				else {
+					refutePerson(suggestion[0], sc);
+					break;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * checks whether the given accusation is correct or not, making sure that the accusation is done in
+	 * the correct format at the same time
+	 * @param sc
+	 * @return
+	 */
+	public boolean checkAccusation(Scanner sc) {
+		System.out.println("(Please make the accusation in the format \"Person, Weapon, Room\")");
+		while(true) {
+			String[] accusation = sc.nextLine().split(",");
+			if(isValidAccusation(accusation)) {
+				if(murderer.getId().equalsIgnoreCase(accusation[0])) {
+					if(murderWeapon.getId().equalsIgnoreCase(accusation[1])) {
+						if(murderRoom.getId().equalsIgnoreCase(accusation[2])) {
+							winningClaim = Arrays.toString(accusation);
+							wonFromAccu = true;
+							return true;
+						}
+						else {
+							refuteRoom(accusation[2],sc);
+							break;
+						}
+					}
+					else {
+						refuteWeapon(accusation[1],sc);
+						break;
+					}
+				}
+				else {
+					refutePerson(accusation[0],sc);
+					break;
+				}
+			}
+		}
+		return false;
+	}
 	
 	public void checkForHelp(Scanner sc) {
 		if(sc.nextInt() == 4) {
 			//System.out.print();
 		}
+	}
+	
+	/**
+	 * finds which player can refute the suggested person
+	 * @param suggestedPerson
+	 */
+	public void refutePerson(String suggestedPerson, Scanner sc) {
+		Player canRefute = null;
+		for(Player player : players) {
+			if(player != currentPlayer) {
+				for(Card card : player.getHand()) {
+					if(card.getId().equalsIgnoreCase(suggestedPerson)){
+						canRefute = player;
+						break;
+					}
+				}
+			}
+		}
+		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
+		"know what card you can refute secretly");
+		if(sc.next().equalsIgnoreCase("y")) {
+			System.out.println(canRefute.showHand());
+			System.out.println("(press 'y' to hide your hand and start the next turn)");
+			if(sc.next().equalsIgnoreCase("y")) {
+				System.out.flush();
+			}
+		}
+	}
+	
+	/**
+	 * finds which player can refute the suggested Weapon
+	 * @param suggestedPerson
+	 */
+	public void refuteWeapon(String suggestedWeapon, Scanner sc) {
+		Player canRefute = null;
+		for(Player player : players) {
+			if(player != currentPlayer) {
+				for(Card card : player.getHand()) {
+					if(card.getId().equalsIgnoreCase(suggestedWeapon)){
+						canRefute = player;
+						break;
+					}
+				}
+			}
+		}
+		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
+		"know what card you can refute secretly");
+		if(sc.next().equalsIgnoreCase("y")) {
+			System.out.println(canRefute.showHand());
+			System.out.println("(press 'y' to hide your hand and start the next turn)");
+			if(sc.next().equalsIgnoreCase("y")) {
+				System.out.flush();
+			}
+		}
+	}
+	
+	/**
+	 * finds which player can refute the suggested Room
+	 * @param suggestedPerson
+	 */
+	public void refuteRoom(String suggestedRoom, Scanner sc) {
+		Player canRefute = null;
+		for(Player player : players) {
+			if(player != currentPlayer) {
+				for(Card card : player.getHand()) {
+					if(card.getId().equalsIgnoreCase(suggestedRoom)){
+						canRefute = player;
+						break;
+					}
+				}
+			}
+		}
+		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
+		"know what card you can refute secretly");
+		if(sc.next().equalsIgnoreCase("y")) {
+			System.out.println(canRefute.showHand());
+			System.out.println("(press 'y' to hide your hand and start the next turn)");
+			if(sc.next().equalsIgnoreCase("y")) {
+				System.out.flush();
+			}
+		}
+	}
+	
+	/**
+	 * checks that the provided suggestion is valid, each card suggested exits and that the room a person
+	 * suggest is the room that they are in
+	 * @param suggestion
+	 * @return
+	 */
+	public boolean isValidSuggestion(String[] suggestion) {
+		boolean validCharacter = false;
+		boolean validWeapon = false;
+		boolean validRoom = false;
+		for(Card character: characters) {
+			if(character.getId().equalsIgnoreCase(suggestion[0])) validCharacter = true;
+		}
+		if(!validCharacter) {
+			System.out.println("The person you have suggested \"" + suggestion[0] +"\" does not exist");
+			return false;
+		}
+		
+		for(Card weapon: weapons) {
+			if(weapon.getId().equalsIgnoreCase(suggestion[1])) validWeapon = true;
+		}
+		if(!validWeapon) {
+			System.out.println("The weapon you have suggested \"" + suggestion[1] +"\" does not exist");
+			return false;
+		}
+		
+		for(Card room: rooms) {
+			if(room.getId().equalsIgnoreCase(suggestion[2])) validWeapon = true;
+		}
+		if(!validRoom) {
+			System.out.println("The room you have suggested \"" + suggestion[2] +"\" does not exist");
+			return false;
+		}
+		
+		if(!suggestion[2].equalsIgnoreCase(currentPlayer.getLocation().getRoom())) {
+			System.out.println("The room you have suggested \"" + suggestion[2] +"\" is not the room that you are currently in");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * checks that the provided accusation is valid, each card suggested exits.
+	 * @param suggestion
+	 * @return
+	 */
+	public boolean isValidAccusation(String[] suggestion) {
+		boolean validCharacter = false;
+		boolean validWeapon = false;
+		boolean validRoom = false;
+		for(Card character: characters) {
+			if(character.getId().equalsIgnoreCase(suggestion[0])) validCharacter = true;
+		}
+		if(!validCharacter) {
+			System.out.println("The person you have suggested \"" + suggestion[0] +"\" does not exist");
+			return false;
+		}
+		
+		for(Card weapon: weapons) {
+			if(weapon.getId().equalsIgnoreCase(suggestion[1])) validWeapon = true;
+		}
+		if(!validWeapon) {
+			System.out.println("The weapon you have suggested \"" + suggestion[1] +"\" does not exist");
+			return false;
+		}
+		
+		for(Card room: rooms) {
+			if(room.getId().equalsIgnoreCase(suggestion[2])) validWeapon = true;
+		}
+		if(!validRoom) {
+			System.out.println("The room you have suggested \"" + suggestion[2] +"\" does not exist");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public static void main(String[] args) {
