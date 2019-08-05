@@ -10,6 +10,14 @@ public class Board {
 		constructBoard();
 	}
 
+	/**The method which draws out the board. At the top, the
+	 * different types of char arrays used to determine what is
+	 * drawn on the board are defined, and then creates Cells, which
+	 * the Board holds in a 2D Array of 24 x 25.
+	 * @param board contains the cells and when the 
+	 * draw method is called on it, draws the cells.
+	 */
+	
 	public void constructBoard() {
 		board = new Cell[24][25];
 		char[] hallway = {'a', '⌈','⌉','⌊','⌋'};
@@ -30,6 +38,10 @@ public class Board {
 		char[] hallDoorRight = {'g', ' ', '/', ' ',' '};
 		char[] loungeDoor = {'g', '/', '|', ' ','|'};
 		char[] studyDoor = {'g', '|', '\\', '|',' '};
+		char[] bottomStart = {'h','⌈','⌉','⌊','⌋'};
+		char[] leftStart = {'i', '⌈','⌉','⌊','⌋'};
+		char[] topStart = {'j', '⌈','⌉','⌊','⌋'};
+		char[] rightStart = {'k', '⌈','⌉','⌊','⌋'};
 		board[0][0] = new Cell("None", blank);
 		board[1][0] = new Cell("None", blank);
 		board[2][0] = new Cell("None", blank);
@@ -39,12 +51,12 @@ public class Board {
 		board[6][0] = new Cell("None", blank);
 		board[7][0] = new Cell("None", blank);
 		board[8][0] = new Cell("None", rightEdge);
-		board[9][0] = new Cell("Hallway", hallway);
+		board[9][0] = new Cell("Hallway", topStart);
 		board[10][0] = new Cell("Ballroom", topLeftCorner);
 		board[11][0] = new Cell("Ballroom", topEdge);
 		board[12][0] = new Cell("Ballroom", topEdge);
 		board[13][0] = new Cell("Ballroom", topRightCorner);
-		board[14][0] = new Cell("Hallway", hallway);
+		board[14][0] = new Cell("Hallway", topStart);
 		board[15][0] = new Cell("None", leftEdge);
 		board[16][0] = new Cell("None", blank);
 		board[17][0] = new Cell("None", blank);
@@ -197,7 +209,7 @@ public class Board {
 		board[20][6] = new Cell("Hallway", hallway);
 		board[21][6] = new Cell("Hallway", hallway);
 		board[22][6] = new Cell("Hallway", hallway);
-		board[23][6] = new Cell("Hallway", hallway);
+		board[23][6] = new Cell("Hallway", rightStart);
 		board[0][7] = new Cell("Hallway", bottomEdge);
 		board[1][7] = new Cell("Hallway", hallway);
 		board[2][7] = new Cell("Hallway", hallway);
@@ -438,7 +450,7 @@ public class Board {
 		board[21][16] = new Cell("Library", new char[] {'a','a','r',' ',' '});
 		board[22][16] = new Cell("Library", new char[] {'a','y',' ',' ',' '});
 		board[23][16] = new Cell("Library", rightEdge);
-		board[0][17] = new Cell("Hallway", hallway);
+		board[0][17] = new Cell("Hallway", leftStart);
 		board[1][17] = new Cell("Hallway", hallway);
 		board[2][17] = new Cell("Hallway", hallway);
 		board[3][17] = new Cell("Hallway", hallway);
@@ -509,7 +521,7 @@ public class Board {
 		board[20][19] = new Cell("Hallway", hallway);
 		board[21][19] = new Cell("Hallway", hallway);
 		board[22][19] = new Cell("Hallway", hallway);
-		board[23][19] = new Cell("Hallway", hallway);
+		board[23][19] = new Cell("Hallway", rightStart);
 		board[0][20] = new Cell("Lounge", leftEdge);
 		board[1][20] = new Cell("Lounge", blank);
 		board[2][20] = new Cell("Lounge", blank);
@@ -613,7 +625,7 @@ public class Board {
 		board[4][24] = new Cell("Lounge", bottomEdge);
 		board[5][24] = new Cell("Lounge", bottomRightCorner);
 		board[6][24] = new Cell("None", topRightCorner);
-		board[7][24] = new Cell("Hallway", hallway);
+		board[7][24] = new Cell("Hallway", bottomStart);
 		board[8][24] = new Cell("None", topLeftCorner);
 		board[9][24] = new Cell("Hall", bottomLeftCorner);
 		board[10][24] = new Cell("Hall", bottomEdge);
@@ -632,6 +644,10 @@ public class Board {
 		board[23][24] = new Cell("Study", bottomRightCorner);
 	}
 
+	/**The draw method which draws the top half of a cell, and
+	 * then the bottom half. This also applies to players.
+	 */
+	
 	public void draw() {
 		for (int j = 0; j < 25; j++) {
 			Boolean lineSecond = false; //used by the program to determine if this is the first or second line of the cell being drawn

@@ -48,9 +48,33 @@ public class Cell {
 			this.southNeighbour = true;
 			this.westNeighbour = false;
 		}
-		else {
+		else if (draw[0] == 'g'){
 			this.northNeighbour = false;
 			this.eastNeighbour = true;
+			this.southNeighbour = false;
+			this.westNeighbour = true;
+		}
+		else if (draw[0] == 'h'){
+			this.northNeighbour = true;
+			this.eastNeighbour = false;
+			this.southNeighbour = false;
+			this.westNeighbour = false;
+		}
+		else if (draw[0] == 'i'){
+			this.northNeighbour = false;
+			this.eastNeighbour = true;
+			this.southNeighbour = false;
+			this.westNeighbour = false;
+		}
+		else if (draw[0] == 'j'){
+			this.northNeighbour = false;
+			this.eastNeighbour = false;
+			this.southNeighbour = true;
+			this.westNeighbour = false;
+		}
+		else if (draw[0] == 'k'){
+			this.northNeighbour = false;
+			this.eastNeighbour = false;
 			this.southNeighbour = false;
 			this.westNeighbour = true;
 		}
