@@ -12,7 +12,7 @@ public class Board {
 
 	public void constructBoard() {
 		board = new Cell[24][25];
-		char[] hallway = {'a', '⎡','⎤','⎣','⎦'};
+		char[] hallway = {'a', '⌈','⌉','⌊','⌋'};
 		char[] blank = {'a',' ',' ',' ',' '};
 		char[] topLeftCorner = {'b','|', '¯', '|', ' '};
 		char[] topRightCorner = {'c','¯','|', ' ','|'};
@@ -61,16 +61,16 @@ public class Board {
 		board[4][1] = new Cell("Kitchen", topEdge);
 		board[5][1] = new Cell("Kitchen", topRightCorner);
 		board[6][1] = new Cell("None", rightEdge);
-		board[7][1] = new Cell("Hallway", topEdge);
-		board[8][1] = new Cell("Hallway", topEdge);
+		board[7][1] = new Cell("Hallway", hallway);
+		board[8][1] = new Cell("Hallway", hallway);
 		board[9][1] = new Cell("Hallway", hallway);
 		board[10][1] = new Cell("Ballroom", leftEdge);
 		board[11][1] = new Cell("Ballroom", blank);
 		board[12][1] = new Cell("Ballroom", blank);
 		board[13][1] = new Cell("Ballroom", rightEdge);
 		board[14][1] = new Cell("Hallway", hallway);
-		board[15][1] = new Cell("Hallway", topEdge);
-		board[16][1] = new Cell("Hallway", topEdge);
+		board[15][1] = new Cell("Hallway", hallway);
+		board[16][1] = new Cell("Hallway", hallway);
 		board[17][1] = new Cell("None", leftEdge);
 		board[18][1] = new Cell("Conservatory", topLeftCorner);
 		board[19][1] = new Cell("Conservatory", topEdge);
@@ -84,7 +84,7 @@ public class Board {
 		board[3][2] = new Cell("Kitchen", blank);
 		board[4][2] = new Cell("Kitchen", blank);
 		board[5][2] = new Cell("Kitchen", rightEdge);
-		board[6][2] = new Cell("Hallway", topEdge);
+		board[6][2] = new Cell("Hallway", hallway);
 		board[7][2] = new Cell("Hallway", hallway);
 		board[8][2] = new Cell("Ballroom", topLeftCorner);
 		board[9][2] = new Cell("Ballroom", topEdge);
@@ -95,7 +95,7 @@ public class Board {
 		board[14][2] = new Cell("Ballroom", topEdge);
 		board[15][2] = new Cell("Ballroom", topRightCorner);
 		board[16][2] = new Cell("Hallway", hallway);
-		board[17][2] = new Cell("Hallway", topEdge);
+		board[17][2] = new Cell("Hallway", hallway);
 		board[18][2] = new Cell("Conservatory", leftEdge);
 		board[19][2] = new Cell("Conservatory", blank);
 		board[20][2] = new Cell("Conservatory", blank);
@@ -638,7 +638,13 @@ public class Board {
 			System.out.print("\n");
 			for (int i = 0; i < 24; i++) {
 				Cell cell = board[i][j];
-				char[] draw = cell.getDraw();
+				char[] draw;
+				if(cell.hasPlayer()) {
+					draw = cell.getPlayerInit();
+				}
+				else {
+					draw = cell.getDraw();
+				}
 				if (lineSecond == false) {System.out.print(String.valueOf(draw[1]) + String.valueOf(draw[2]));}
 				else {System.out.print(String.valueOf(draw[3]) + String.valueOf(draw[4]));}
 				if (i == 23 && lineSecond == false) {
@@ -648,5 +654,10 @@ public class Board {
 				}
 			}
 		}
+		System.out.print("\n");
+	}
+	
+	public Cell getCell(int x, int y) {
+		return board[x][y];
 	}
 }

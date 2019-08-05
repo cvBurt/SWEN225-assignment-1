@@ -1,3 +1,4 @@
+import java.util.*;
 
 public class Cell {
 	Boolean northNeighbour;
@@ -6,6 +7,8 @@ public class Cell {
 	Boolean westNeighbour;
 	String room;
 	char[] draw;
+	boolean occupied;
+	char[] player;
 
 	public Cell(String room, char[] draw) {
 		this.draw = draw;
@@ -52,6 +55,7 @@ public class Cell {
 			this.westNeighbour = true;
 		}
 		this.room = room;
+		this.occupied = false;
 	}
 
 	public Boolean getNorthNeighbour() {
@@ -81,5 +85,21 @@ public class Cell {
 	public char[] getDraw() {
 		return draw;
 	}
+	
+	public boolean hasPlayer() {
+		return this.occupied;
+	}
 
+	public void setPlayer(char[] player) {
+		this.player = player;
+		occupied = true;
+	}
+	
+	public char[] getPlayerInit() {
+		return player;
+	}
+	
+	public void removePlayer() {
+		occupied = false;
+	}
 }
