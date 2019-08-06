@@ -9,7 +9,7 @@ public class Cluedo {
 	private Card murderer;
 	private Card murderRoom;
 	private Board board;
-	private Player currentPlayer;
+	public Player currentPlayer;
 	private String winningClaim;
 	private boolean wonFromAccu;
 	
@@ -22,7 +22,7 @@ public class Cluedo {
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Hello, welcome to cluedo\n"
 				+ "if at any time you need clarifiction on the\n"
-				+ "rules type \"4\" for a list of the rules\n\n");
+				+ "rules type \"/4\" for a list of the rules\n\n");
 		setup(sc);
 	}
 	
@@ -89,23 +89,24 @@ public class Cluedo {
 		while(true) {
 			currentPlayer = players.get(playerTurn);
 			if(!currentPlayer.getStatus()) {
-				System.out.println("It is " + currentPlayer.getName() + "'s are you ready for your turn?(enter any lettered key to continue)");
+				System.out.println("It is " + currentPlayer.getName() + "'s turn, enter any lettered key to continue");
 				if(sc.next() != null) {
 					board.draw();
-					System.out.println("Do you want to roll the dice?(y/n)");
-					if(sc.next().equalsIgnoreCase("y")) {
-						int roll = rollDice();
-						System.out.println("You rolled " + roll + "! whats your move?");
-						validateMove(sc, roll);
-					}
+					int roll = rollDice();
+					System.out.println("You rolled " + roll + "! whats your move?");
 					if(!currentPlayer.getLocation().getRoom().equals("Hallway")) {
-						System.out.println("Would you like to make a suggestion or accusation?(please state)");
-						if(sc.next().equalsIgnoreCase("suggestion")) {
+						exitRoom(sc);
+					}
+					validateMove(sc, roll);
+					if(!currentPlayer.getLocation().getRoom().equals("Hallway")) {
+						System.out.println("Enter 'y' to make an suggestion or enter any ohter letter to skip");
+						if(sc.next().equalsIgnoreCase("y")) {
 							if(checkSuggestion(sc)) {
 								break;
 							}
 						}
-						if(sc.next().equalsIgnoreCase("accusation")) {
+						System.out.println("Enter 'y' to make an accusation or enter any ohter letter to skip");
+						if(sc.next().equalsIgnoreCase("y")) {
 							if(checkAccusation(sc)) {
 								break;
 							}
@@ -190,6 +191,38 @@ public class Cluedo {
 		return (rand.nextInt(6)+1) + (rand.nextInt(6)+1);
 	}
 	
+	/**
+	 * displays options for exiting room and moves player to selected exit 
+	 * @param sc
+	 */
+	public void exitRoom(Scanner sc) {
+		System.out.println(currentPlayer.getLocation().getRoom());
+		Cell[] exits = board.roomDoors.get(currentPlayer.getLocation().getRoom());
+		int numExits = exits.length;
+		System.out.println("Select an exit from 0 - " + (numExits-1));
+		for(int i=0; i<numExits; i++) {
+			exits[i].setPlayer(new char[] {' ',Character.forDigit(i, 10), ' ',' ',' ' });
+		}
+		board.draw();
+		int input;
+		while(true) {
+			input = sc.nextInt();
+			if(input > -1 && input < numExits) {
+				exits[input].removePlayer();
+				currentPlayer.getLocation().removePlayer();
+				currentPlayer.setLocation(exits[input]);
+				exits[input].setPlayer(currentPlayer.getPlayerInitials());
+				board.draw();
+				break;
+			}
+		}
+		for(int i=0; i<numExits; i++) {
+			if(i != input) {
+				exits[i].removePlayer();
+			}
+		}
+	}
+	
 	public void validateMove(Scanner sc, int roll) {
 		String[] move;
 		List<String> validMoves = new ArrayList<String>(Arrays.asList("n","e","s","w"));
@@ -237,7 +270,12 @@ public class Cluedo {
 						return false;
 					}
 					if(visited.contains(proposedLoc)) {
-						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+						System.out.println("Your move " + Arrays.toString(move) + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.hasPlayer()) {
+						System.out.println("Your move tries to enter a cell with another player in it\n"
 								+ "(Please enter a new move)");
 						return false;
 					}
@@ -268,7 +306,12 @@ public class Cluedo {
 						return false;
 					}
 					if(visited.contains(proposedLoc)) {
-						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+						System.out.println("Your move " + Arrays.toString(move) + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.hasPlayer()) {
+						System.out.println("Your move tries to enter a cell with another player in it\n"
 								+ "(Please enter a new move)");
 						return false;
 					}
@@ -299,7 +342,12 @@ public class Cluedo {
 						return false;
 					}
 					if(visited.contains(proposedLoc)) {
-						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+						System.out.println("Your move " + Arrays.toString(move) + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.hasPlayer()) {
+						System.out.println("Your move tries to enter a cell with another player in it\n"
 								+ "(Please enter a new move)");
 						return false;
 					}
@@ -330,7 +378,12 @@ public class Cluedo {
 						return false;
 					}
 					if(visited.contains(proposedLoc)) {
-						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+						System.out.println("Your move " + Arrays.toString(move) + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.hasPlayer()) {
+						System.out.println("Your move tries to enter a cell with another player in it\n"
 								+ "(Please enter a new move)");
 						return false;
 					}
@@ -360,7 +413,7 @@ public class Cluedo {
 			currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
 			return true;
 		}
-		System.out.println("You did not move enough spaces\n"
+		System.out.println("You did not move right amount of spaces\n"
 				+ "Please enter a new move:");
 		return false;
 	}
@@ -445,12 +498,10 @@ public class Cluedo {
 	public void refutePerson(String suggestedPerson, Scanner sc) {
 		Player canRefute = null;
 		for(Player player : players) {
-			if(player != currentPlayer) {
-				for(Card card : player.getHand()) {
-					if(card.getId().equalsIgnoreCase(suggestedPerson)){
-						canRefute = player;
-						break;
-					}
+			for(Card card : player.getHand()) {
+				if(card.getId().equalsIgnoreCase(suggestedPerson)){
+					canRefute = player;
+					break;
 				}
 			}
 		}

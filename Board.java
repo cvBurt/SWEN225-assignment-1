@@ -1,12 +1,13 @@
 import java.util.*;
 
 public class Board {
-	Cell board[][];
-	String murderWeapon;
-	String murderer;
-	String murderRoom;
-
+	private Cell board[][];
+	public Map<String, Cell[]> roomDoors;
+	public Map<String, Cell[]> roomStore;
+	
 	public Board () {
+		roomDoors = new HashMap<String, Cell[]>();
+		roomStore = new HashMap<String, Cell[]>();
 		constructBoard();
 		for(int row=0; row<board.length;row++) {
 			for(int col=0; col<board[row].length;col++) {
@@ -14,7 +15,8 @@ public class Board {
 				update.setPos(row,col);
 			}
 		}
-		System.out.println(board[2][3].getX() + "," + board[2][3].getY());
+		setDoors();
+		setStoreLocations();
 	}
 
 	/**The method which draws out the board. At the top, the
@@ -35,7 +37,7 @@ public class Board {
 		char[] bottomRightCorner = {'e',' ', '|', '¯', '¯'};
 		char[] leftEdge = {'m','|', ' ', '|', ' '};
 		char[] rightEdge = {'l',' ', '|', ' ', '|'};
-		char[] verticalDoor = {'f', '/', ' ', '\\', ' '};
+		char[] verticalDoor = {'g', '/', ' ', '\\', ' '};
 		char[] topEdge = {'n','¯', '¯', ' ', ' '};
 		char[] bottomEdge = {'o',' ', ' ', '¯', '¯'};
 		char[] horizontalDoor = {'f', ' ', ' ', '\\','/'};
@@ -157,9 +159,9 @@ public class Board {
 		board[9][4] = new Cell("Ball Room", blank);
 		board[10][4] = new Cell("Ball Room", new char[] {'a','B','a',' ',' '});
 		board[11][4] = new Cell("Ball Room", new char[] {'a','l','l',' ',' '});
-		board[12][4] = new Cell("Ball Room", new char[] {'a','r','o',' ',' '});
-		board[13][4] = new Cell("Ball Room", new char[] {'a','o','m',' ',' '});
-		board[14][4] = new Cell("Ball Room", blank);
+		board[12][4] = new Cell("Ball Room", new char[] {'a',' ','R',' ',' '});
+		board[13][4] = new Cell("Ball Room", new char[] {'a','o','o',' ',' '});
+		board[14][4] = new Cell("Ball Room", new char[] {'a','m',' ',' ',' '});
 		board[15][4] = new Cell("Ball Room", rightEdge);
 		board[16][4] = new Cell("Hallway", hallway);
 		board[17][4] = new Cell("Hallway", hallway);
@@ -558,6 +560,8 @@ public class Board {
 		board[2][21] = new Cell("Lounge", new char[] {'a',' ',' ','L','o'});
 		board[3][21] = new Cell("Lounge", new char[] {'a',' ',' ','u','n'});
 		board[4][21] = new Cell("Lounge", new char[] {'a',' ',' ','g','e'});
+		
+		
 		board[5][21] = new Cell("Lounge", blank);
 		board[6][21] = new Cell("Lounge", rightEdge);
 		board[7][21] = new Cell("Hallway", hallway);
@@ -654,7 +658,6 @@ public class Board {
 	/**The draw method which draws the top half of a cell, and
 	 * then the bottom half. This also applies to players.
 	 */
-	
 	public void draw() {
 		for (int j = 0; j < 25; j++) {
 			Boolean lineSecond = false; //used by the program to determine if this is the first or second line of the cell being drawn
@@ -688,5 +691,33 @@ public class Board {
 	 */
 	public Cell getCell(int x, int y) {
 		return board[x][y];
+	}
+	
+	/**
+	 * stores the positions of exiting door for each room for when a player exits a room
+	 */
+	public void setDoors() {
+		roomDoors.put("Conservatory", new Cell[] {board[18][5]});
+		roomDoors.put("Ball Room", new Cell[] {board[7][5],board[16][5],board[9][8],board[14][8]});
+		roomDoors.put("Kitchen", new Cell[] {board[4][7]});
+		roomDoors.put("Billiard Room", new Cell[] {board[17][9],board[22][12]});
+		roomDoors.put("Dining Room", new Cell[] {board[8][12],board[6][16]});
+		roomDoors.put("Library", new Cell[] {board[20][13],board[16][16]});
+		roomDoors.put("Hall", new Cell[] {board[11][17],board[12][17],board[15][20]});
+		roomDoors.put("Lounge", new Cell[] {board[6][18]});
+		roomDoors.put("Study", new Cell[] {board[17][20]});
+	}
+	
+	public void setStoreLocations() {
+		roomStore.put("Conservatory", new Cell[] {board[19][3],board[20][3],board[21][3],board[22][3],board[20][4],board[21][4]});
+		roomStore.put("Ball Room", new Cell[] {board[10][5],board[12][5],board[11][6],board[10][2],board[12][2],board[11][1]});
+		roomStore.put("Kitchen", new Cell[] {board[1][2],board[2][2],board[3][2],board[1][4],board[2][4],board[3][4]});
+		roomStore.put("Billiard Room", new Cell[] {board[19][9],board[20][9],board[21][9],board[22][9],board[20][11],board[21][11]});
+		roomStore.put("Dining Room", new Cell[] {board[1][14],board[3][14],board[5][14],board[1][10],board[2][10],board[3][10]});
+		roomStore.put("None", new Cell[] {board[2][11],board[4][11],board[2][13],board[4][13],board[2][15]});
+		roomDoors.put("Library", new Cell[] {board[19][15],board[20][15],board[21][15],board[19][17],board[20][17],board[21][17]});
+		roomDoors.put("Hall", new Cell[] {board[11][17],board[12][17],board[15][20]});
+		roomDoors.put("Lounge", new Cell[] {board[1][23],board[3][23],board[4][23],board[1][19],board[3][19],board[4][19]});
+		roomDoors.put("Study", new Cell[] {board[17][20]});
 	}
 }
