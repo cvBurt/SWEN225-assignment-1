@@ -8,7 +8,9 @@ public class Cell {
 	String room;
 	char[] draw;
 	boolean occupied;
+	boolean isExit;
 	char[] player;
+	char[] exit;
 	int x;
 	int y;
 
@@ -84,7 +86,7 @@ public class Cell {
 			this.northNeighbour = true; 
 			this.eastNeighbour = false;
 			this.southNeighbour = true;
-			this.westNeighbour = false;
+			this.westNeighbour = true;
 		}
 		else if (draw[0] == 'm'){ // doesn't allow neighbour in the left direction
 			this.northNeighbour = true; 
@@ -98,7 +100,7 @@ public class Cell {
 			this.southNeighbour = true;
 			this.westNeighbour = true;
 		}
-		else if (draw[0] == '0'){ // doesn't allow neighbour in the down direction
+		else if (draw[0] == 'o'){ // doesn't allow neighbour in the down direction
 			this.northNeighbour = true; 
 			this.eastNeighbour = true;
 			this.southNeighbour = false;
@@ -153,6 +155,23 @@ public class Cell {
 	
 	public void removePlayer() {
 		occupied = false;
+	}
+	
+	public void setExit(char[] exit) {
+		this.exit = exit;
+		this.isExit = true;
+	}
+	
+	public char[] getExit() {
+		return exit;
+	}
+	
+	public void removeExit() {
+		isExit = false;
+	}
+	
+	public boolean isExit() {
+		return this.isExit;
 	}
 	
 	public void setPos(int row,int col) {

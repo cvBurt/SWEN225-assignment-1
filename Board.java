@@ -19,14 +19,14 @@ public class Board {
 		setStoreLocations();
 	}
 
-	/**The method which draws out the board. At the top, the
+	/**
+	 * The method which draws out the board. At the top, the
 	 * different types of char arrays used to determine what is
 	 * drawn on the board are defined, and then creates Cells, which
 	 * the Board holds in a 2D Array of 24 x 25.
 	 * @param board contains the cells and when the 
 	 * draw method is called on it, draws the cells.
 	 */
-	
 	public void constructBoard() {
 		board = new Cell[24][25];
 		char[] hallway = {'a', '⌈','⌉','⌊','⌋'};
@@ -560,8 +560,6 @@ public class Board {
 		board[2][21] = new Cell("Lounge", new char[] {'a',' ',' ','L','o'});
 		board[3][21] = new Cell("Lounge", new char[] {'a',' ',' ','u','n'});
 		board[4][21] = new Cell("Lounge", new char[] {'a',' ',' ','g','e'});
-		
-		
 		board[5][21] = new Cell("Lounge", blank);
 		board[6][21] = new Cell("Lounge", rightEdge);
 		board[7][21] = new Cell("Hallway", hallway);
@@ -655,7 +653,8 @@ public class Board {
 		board[23][24] = new Cell("Study", bottomRightCorner);
 	}
 
-	/**The draw method which draws the top half of a cell, and
+	/**
+	 * The draw method which draws the top half of a cell, and
 	 * then the bottom half. This also applies to players.
 	 */
 	public void draw() {
@@ -667,6 +666,9 @@ public class Board {
 				char[] draw;
 				if(cell.hasPlayer()) {
 					draw = cell.getPlayerInit();
+				}
+				else if(cell.isExit()) {
+					draw = cell.getExit();
 				}
 				else {
 					draw = cell.getDraw();
@@ -681,6 +683,41 @@ public class Board {
 			}
 		}
 		System.out.print("\n");
+	}
+	
+	/**
+	 * converts board into a string object (used for testing)
+	 */
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		for (int j = 0; j < 25; j++) {
+			builder.append(System.getProperty("line.separator"));
+			Boolean lineSecond = false; //used by the program to determine if this is the first or second line of the cell being drawn
+			for (int i = 0; i < 24; i++) {
+				Cell cell = board[i][j];
+				char[] draw;
+				if(cell.hasPlayer()) {
+					draw = cell.getPlayerInit();
+				}
+				else {
+					draw = cell.getDraw();
+				}
+				if (lineSecond == false) {
+					builder.append(draw[1]);
+					builder.append(draw[2]);
+					}
+				else {
+					builder.append(draw[3]);
+					builder.append(draw[4]);
+				}
+				if (i == 23 && lineSecond == false) {
+					builder.append(System.getProperty("line.separator"));
+					i = -1;
+					lineSecond = true;
+				}
+			}
+		}
+		return builder.toString();
 	}
 	
 	/**
@@ -715,9 +752,9 @@ public class Board {
 		roomStore.put("Billiard Room", new Cell[] {board[19][9],board[20][9],board[21][9],board[22][9],board[20][11],board[21][11]});
 		roomStore.put("Dining Room", new Cell[] {board[1][14],board[3][14],board[5][14],board[1][10],board[2][10],board[3][10]});
 		roomStore.put("None", new Cell[] {board[2][11],board[4][11],board[2][13],board[4][13],board[2][15]});
-		roomDoors.put("Library", new Cell[] {board[19][15],board[20][15],board[21][15],board[19][17],board[20][17],board[21][17]});
-		roomDoors.put("Hall", new Cell[] {board[11][17],board[12][17],board[15][20]});
-		roomDoors.put("Lounge", new Cell[] {board[1][23],board[3][23],board[4][23],board[1][19],board[3][19],board[4][19]});
-		roomDoors.put("Study", new Cell[] {board[17][20]});
+		roomStore.put("Library", new Cell[] {board[19][15],board[20][15],board[21][15],board[19][17],board[20][17],board[21][17]});
+		roomStore.put("Hall", new Cell[] {board[11][20],board[12][19],board[13][20],board[11][23],board[12][22],board[13][23]});
+		roomStore.put("Lounge", new Cell[] {board[1][23],board[3][23],board[4][23],board[1][19],board[3][19],board[4][19]});
+		roomStore.put("Study", new Cell[] {board[22][23],board[22][21],board[20][23],board[20][21],board[19][23],board[19][21]});
 	}
 }

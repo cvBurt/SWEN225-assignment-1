@@ -71,14 +71,26 @@ public class Player {
 		dead = true;
 	}
 	
+	/**
+	 * return the room that this player was in for the previous round
+	 * @return
+	 */
 	public String getPrevRoundRoom() {
 		return prevRoundRoom;
 	}
 
+	/**
+	 * sets the room that this player was in for the previous round
+	 * @param prevRoundRoom
+	 */
 	public void setPrevRoundRoom(String prevRoundRoom) {
 		this.prevRoundRoom = prevRoundRoom;
 	}
 	
+	/**
+	 * return the char[] that displays this players initials
+	 * @return
+	 */
 	public char[] getPlayerInitials() {
 		return this.initials;
 	}
