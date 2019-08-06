@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 
 public class Cluedo {
@@ -34,19 +35,20 @@ public class Cluedo {
 	public void setup(Scanner sc) {
 		System.out.println("How many players are palying?\nEnter a number between 3-6:");
 		int noPlayers;
-		while(true) {
-			if(sc.hasNext()) {
+		//while(true) {
+			//if(sc.hasNext()) {
 				noPlayers = sc.nextInt();
-				if(noPlayers >= 3 && noPlayers <= 6) break;
-				else {
-					System.out.println("Please enter a number between 3-6:");
-				}
-			}	
-		}
+				//if(noPlayers >= 3 && noPlayers <= 6) break;
+				//else {
+				//	System.out.println("Please enter a number between 3-6:");
+				//}
+			//}
+		//}
 		for(int i=0; i<noPlayers; i++) {
 			Card character = characters.get(i);
-			Cell startPos = board.getCell(character.getStartX(), character.getStartY());
-			Player toAdd = new Player(character.getId(), startPos);
+			System.out.println(character.getStartRow() +","+character.getStartCol());
+			Cell startPos = board.getCell(character.getStartRow(), character.getStartCol());
+			Player toAdd = new Player(character.getId(), startPos, character.getInitials());
 			startPos.setPlayer(character.getInitials());
 			players.add(toAdd);
 		}
@@ -70,11 +72,11 @@ public class Cluedo {
 		
 		System.out.println("Take turns noting down the cards that have been delt to each player. (keep them secret to you!!");
 		for(Player player : players) {
-			System.out.println(player.getName() + " when ready press 'y' to display your hand");
-			if(sc.next().equalsIgnoreCase("y")) {
+			System.out.println(player.getName() + " when ready enter any lettered key to display your hand");
+			if(sc.next() != null) {
 				System.out.println(player.showHand());
-				System.out.println("(When ready press 'y' to hide your hand again");
-				if(sc.next().equalsIgnoreCase("y")) System.out.flush();
+				System.out.println("(When ready enter any letered key to hide your hand again)");
+				if(sc.next() != null) clearConsole();
 			}
 		}
 		tick(sc);
@@ -89,25 +91,23 @@ public class Cluedo {
 		while(true) {
 			currentPlayer = players.get(playerTurn);
 			if(!currentPlayer.getStatus()) {
-				System.out.println("It is " + currentPlayer.getName() + "'s are you ready for your turn?(y/n)");
-				board.draw();
-				if(sc.next().equalsIgnoreCase("y")  ) {
+				System.out.println("It is " + currentPlayer.getName() + "'s are you ready for your turn?(enter any lettered key to continue)");
+				if(sc.next() != null) {
+					board.draw();
 					System.out.println("Do you want to roll the dice?(y/n)");
 					if(sc.next().equalsIgnoreCase("y")) {
 						int roll = rollDice();
 						System.out.println("You rolled " + roll + "! whats your move?");
-						if(sc.nextLine() != null) {
-							applyMove(sc.nextLine(),sc, roll);
-						}
+						validateMove(sc, roll);
 					}
-					if(!currentPlayer.getLocation().getRoom().equals("hallway")) {
+					if(!currentPlayer.getLocation().getRoom().equals("Hallway")) {
 						System.out.println("Would you like to make a suggestion or accusation?(please state)");
 						if(sc.next().equalsIgnoreCase("suggestion")) {
 							if(checkSuggestion(sc)) {
 								break;
 							}
 						}
-						else if(sc.next().equalsIgnoreCase("accusation")) {
+						if(sc.next().equalsIgnoreCase("accusation")) {
 							if(checkAccusation(sc)) {
 								break;
 							}
@@ -192,8 +192,179 @@ public class Cluedo {
 		return (rand.nextInt(6)+1) + (rand.nextInt(6)+1);
 	}
 	
-	public void applyMove(String move, Scanner sc, int roll) {
-		
+	public void validateMove(Scanner sc, int roll) {
+		String[] move;
+		List<String> validMoves = new ArrayList<String>(List.of("n","e","s","w"));
+		while(true) {
+			if(sc.nextLine() != null) {
+				boolean validMove = true;
+				move = sc.nextLine().split(",");
+				for(int i=0; i <move.length; i++) {
+					String character = move[i];
+					if(!validMoves.contains(character.toLowerCase())) {
+						validMove = false;
+					}
+				}
+				if(validMove) {
+					if(applyMove(move,roll)) {
+						board.draw();
+						break;
+					}
+				}
+				else {
+					for(int i=0; i <move.length; i++) {
+						System.out.print(move[i]);
+					}
+					System.out.print("\n");
+					System.out.println("Please make sure you type only 'n','e','s' or 'w' and that each letter is sepearted by commas");
+				}
+			}
+		}
+	}
+	
+	public boolean applyMove(String[] move, int roll) {
+		Cell proposedLoc = null;
+		Cell currentLoc = currentPlayer.getLocation();
+		Cell originLoc = currentPlayer.getLocation();
+		String prevRoundRoom = currentPlayer.getPrevRoundRoom();
+		Set<Cell> visited = new HashSet<Cell>();
+		for(int i=0; i<move.length; i++) {
+			visited.add(currentLoc);
+			if(move[i].equalsIgnoreCase("n")) {
+				if(currentLoc.getNorthNeighbour()) {
+					proposedLoc = board.getCell(currentLoc.getX(),currentLoc.getY()-1);
+					if(!prevRoundRoom.equals("Hallway") && prevRoundRoom.equals(proposedLoc.getRoom())){
+						System.out.println("You cannot re-enter a room in the same turn\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(visited.contains(proposedLoc)) {
+						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.getSouthNeighbour()) {
+						currentLoc = proposedLoc;
+						if(!currentLoc.getRoom().equals("Hallway")) {
+							currentPlayer.setLocation(currentLoc);
+							currentLoc.setPlayer(currentPlayer.getPlayerInitials());
+							originLoc.removePlayer();
+							currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
+							return true;
+						}
+					}
+					else {
+						System.out.println("Your move crashes into a wall\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					
+				}
+			}
+			else if(move[i].equalsIgnoreCase("s")) {
+				if(currentLoc.getSouthNeighbour()) {
+					proposedLoc = board.getCell(currentLoc.getX(),currentLoc.getY()+1);
+					if(!prevRoundRoom.equals("Hallway") && prevRoundRoom.equals(proposedLoc.getRoom())){
+						System.out.println("You cannot re-enter a room in the same turn\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(visited.contains(proposedLoc)) {
+						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.getNorthNeighbour()) {
+						currentLoc = proposedLoc;
+						if(!currentLoc.getRoom().equals("Hallway")) {
+							currentPlayer.setLocation(currentLoc);
+							currentLoc.setPlayer(currentPlayer.getPlayerInitials());
+							originLoc.removePlayer();
+							currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
+							return true;
+						}
+					}
+					else {
+						System.out.println("Your move crashes into a wall\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					
+				}
+			}
+			else if(move[i].equalsIgnoreCase("w")) {
+				if(currentLoc.getWestNeighbour()) {
+					proposedLoc = board.getCell(currentLoc.getX()-1,currentLoc.getY());
+					if(!prevRoundRoom.equals("Hallway") && prevRoundRoom.equals(proposedLoc.getRoom())){
+						System.out.println("You cannot re-enter a room in the same turn\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(visited.contains(proposedLoc)) {
+						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.getEastNeighbour()) {
+						currentLoc = proposedLoc;
+						if(!currentLoc.getRoom().equals("Hallway")) {
+							currentPlayer.setLocation(currentLoc);
+							currentLoc.setPlayer(currentPlayer.getPlayerInitials());
+							originLoc.removePlayer();
+							currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
+							return true;
+						}
+					}
+					else {
+						System.out.println("Your move crashes into a wall\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					
+				}
+			}
+			else if(move[i].equalsIgnoreCase("e")) {
+				if(currentLoc.getEastNeighbour()) {
+					proposedLoc = board.getCell(currentLoc.getX()+1,currentLoc.getY());
+					if(!prevRoundRoom.equals("Hallway") && prevRoundRoom.equals(proposedLoc.getRoom())){
+						System.out.println("You cannot re-enter a room in the same turn\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(visited.contains(proposedLoc)) {
+						System.out.println("Your move " + move.toString() + " loops back on itself\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					if(proposedLoc.getWestNeighbour()) {
+						currentLoc = proposedLoc;
+						if(!currentLoc.getRoom().equals("Hallway")) {
+							currentPlayer.setLocation(currentLoc);
+							currentLoc.setPlayer(currentPlayer.getPlayerInitials());
+							originLoc.removePlayer();
+							currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
+							return true;
+						}
+					}
+					else {
+						System.out.println("Your move crashes into a wall\n"
+								+ "(Please enter a new move)");
+						return false;
+					}
+					
+				}
+			}
+		}
+		if(move.length == roll) {
+			currentPlayer.setLocation(currentLoc);
+			currentLoc.setPlayer(currentPlayer.getPlayerInitials());
+			originLoc.removePlayer();
+			currentPlayer.setPrevRoundRoom(currentLoc.getRoom());
+			return true;
+		}
+		System.out.println("You did not move enough spaces\n"
+				+ "Please enter a new move:");
+		return false;
 	}
 	
 	/**
@@ -239,23 +410,25 @@ public class Cluedo {
 	 * checks whether the given accusation is correct or not, making sure that the accusation is done in
 	 * the correct format at the same time
 	 * @param sc
-	 * @return
+	 * @return if accusation is true or false
 	 */
 	public boolean checkAccusation(Scanner sc) {
 		System.out.println("(Please make the accusation in the format \"Person,Weapon,Room\")");
 		while(true) {
-			String[] accusation = sc.nextLine().split(",");
-			if(isValidAccusation(accusation)) {
-				if(murderer.getId().equalsIgnoreCase(accusation[0])) {
-					if(murderWeapon.getId().equalsIgnoreCase(accusation[1])) {
-						if(murderRoom.getId().equalsIgnoreCase(accusation[2])) {
-							winningClaim = Arrays.toString(accusation);
-							wonFromAccu = true;
-							return true;
+			if(sc.hasNextLine()) {
+				String[] accusation = sc.nextLine().split(",");
+				if(isValidAccusation(accusation)) {
+					if(murderer.getId().equalsIgnoreCase(accusation[0])) {
+						if(murderWeapon.getId().equalsIgnoreCase(accusation[1])) {
+							if(murderRoom.getId().equalsIgnoreCase(accusation[2])) {
+								winningClaim = Arrays.toString(accusation);
+								wonFromAccu = true;
+								return true;
+							}
 						}
 					}
+					break;
 				}
-				break;
 			}
 		}
 		return false;
@@ -283,14 +456,12 @@ public class Cluedo {
 				}
 			}
 		}
-		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
+		System.out.println(canRefute.getName() + " can refute, type any key to see hand and let " + currentPlayer.getName() +
 		" know what card you can refute secretly");
-		if(sc.next().equalsIgnoreCase("y")) {
+		if(sc.next() != null) {
 			System.out.println(canRefute.showHand());
-			System.out.println("(press 'y' to hide your hand and start the next turn)");
-			if(sc.next().equalsIgnoreCase("y")) {
-				System.out.flush();
-			}
+			System.out.println("(press any key to hide your hand and start the next turn)");
+			if(sc.next() != null) clearConsole();
 		}
 	}
 	
@@ -312,13 +483,13 @@ public class Cluedo {
 		}
 		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
 		" know what card you can refute secretly");
-		if(sc.next().equalsIgnoreCase("y")) {
-			System.out.println(canRefute.showHand());
-			System.out.println("(press 'y' to hide your hand and start the next turn)");
-			if(sc.next().equalsIgnoreCase("y")) {
-				System.out.flush();
-			}
-		}
+		System.out.println(canRefute.getName() + " can refute, type any key to see hand and let " + currentPlayer.getName() +
+				" know what card you can refute secretly");
+				if(sc.next() != null) {
+					System.out.println(canRefute.showHand());
+					System.out.println("(press any key to hide your hand and start the next turn)");
+					if(sc.next() != null) clearConsole();
+				}
 	}
 	
 	/**
@@ -337,15 +508,13 @@ public class Cluedo {
 				}
 			}
 		}
-		System.out.println(canRefute.getName() + " can refute, type 'y' to see hand and let " + currentPlayer.getName() +
-		" know what card you can refute secretly");
-		if(sc.next().equalsIgnoreCase("y")) {
-			System.out.println(canRefute.showHand());
-			System.out.println("(press 'y' to hide your hand and start the next turn)");
-			if(sc.next().equalsIgnoreCase("y")) {
-				System.out.flush();
-			}
-		}
+		System.out.println(canRefute.getName() + " can refute, type any key to see hand and let " + currentPlayer.getName() +
+				" know what card you can refute secretly");
+				if(sc.next() != null) {
+					System.out.println(canRefute.showHand());
+					System.out.println("(press any key to hide your hand and start the next turn)");
+					if(sc.next() != null) clearConsole();
+				}
 	}
 	
 	/**
@@ -425,6 +594,18 @@ public class Cluedo {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * clears console
+	 */
+	public void clearConsole() {
+		for(int i=0; i<90;i++) {
+			if(i == 50) {
+				System.out.println("---------------------------Stop Cheating, Scum---------------------------");
+			}
+			System.out.print("\n");
+		}
 	}
 	
 	public static void main(String[] args) {

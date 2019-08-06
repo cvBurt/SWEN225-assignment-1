@@ -8,6 +8,13 @@ public class Board {
 
 	public Board () {
 		constructBoard();
+		for(int row=0; row<board.length;row++) {
+			for(int col=0; col<board[row].length;col++) {
+				Cell update = board[row][col];
+				update.setPos(row,col);
+			}
+		}
+		System.out.println(board[2][3].getX() + "," + board[2][3].getY());
 	}
 
 	/**The method which draws out the board. At the top, the
@@ -26,18 +33,18 @@ public class Board {
 		char[] topRightCorner = {'c','¯','|', ' ','|'};
 		char[] bottomLeftCorner = {'d','|', ' ', '¯', '¯'};
 		char[] bottomRightCorner = {'e',' ', '|', '¯', '¯'};
-		char[] leftEdge = {'f','|', ' ', '|', ' '};
-		char[] rightEdge = {'f',' ', '|', ' ', '|'};
+		char[] leftEdge = {'m','|', ' ', '|', ' '};
+		char[] rightEdge = {'l',' ', '|', ' ', '|'};
 		char[] verticalDoor = {'f', '/', ' ', '\\', ' '};
-		char[] topEdge = {'g','¯', '¯', ' ', ' '};
-		char[] bottomEdge = {'g',' ', ' ', '¯', '¯'};
-		char[] horizontalDoor = {'g', ' ', ' ', '\\','/'};
-		char[] conservatoryDoor = {'g', '|', ' ', '|','/'};
-		char[] libraryTopDoor = {'g', '\\', '/', ' ', ' '};
+		char[] topEdge = {'n','¯', '¯', ' ', ' '};
+		char[] bottomEdge = {'o',' ', ' ', '¯', '¯'};
+		char[] horizontalDoor = {'f', ' ', ' ', '\\','/'};
+		char[] conservatoryDoor = {'f', '|', ' ', '|','/'};
+		char[] libraryTopDoor = {'f', '\\', '/', ' ', ' '};
 		char[] hallDoorLeft = {'g', '\\', ' ', ' ',' '};
 		char[] hallDoorRight = {'g', ' ', '/', ' ',' '};
-		char[] loungeDoor = {'g', '/', '|', ' ','|'};
-		char[] studyDoor = {'g', '|', '\\', '|',' '};
+		char[] loungeDoor = {'f', '/', '|', ' ','|'};
+		char[] studyDoor = {'f', '|', '\\', '|',' '};
 		char[] bottomStart = {'h','⌈','⌉','⌊','⌋'};
 		char[] leftStart = {'i', '⌈','⌉','⌊','⌋'};
 		char[] topStart = {'j', '⌈','⌉','⌊','⌋'};
@@ -52,10 +59,10 @@ public class Board {
 		board[7][0] = new Cell("None", blank);
 		board[8][0] = new Cell("None", rightEdge);
 		board[9][0] = new Cell("Hallway", topStart);
-		board[10][0] = new Cell("Ballroom", topLeftCorner);
-		board[11][0] = new Cell("Ballroom", topEdge);
-		board[12][0] = new Cell("Ballroom", topEdge);
-		board[13][0] = new Cell("Ballroom", topRightCorner);
+		board[10][0] = new Cell("Ball Room", topLeftCorner);
+		board[11][0] = new Cell("Ball Room", topEdge);
+		board[12][0] = new Cell("Ball Room", topEdge);
+		board[13][0] = new Cell("Ball Room", topRightCorner);
 		board[14][0] = new Cell("Hallway", topStart);
 		board[15][0] = new Cell("None", leftEdge);
 		board[16][0] = new Cell("None", blank);
@@ -76,10 +83,10 @@ public class Board {
 		board[7][1] = new Cell("Hallway", hallway);
 		board[8][1] = new Cell("Hallway", hallway);
 		board[9][1] = new Cell("Hallway", hallway);
-		board[10][1] = new Cell("Ballroom", leftEdge);
-		board[11][1] = new Cell("Ballroom", blank);
-		board[12][1] = new Cell("Ballroom", blank);
-		board[13][1] = new Cell("Ballroom", rightEdge);
+		board[10][1] = new Cell("Ball Room", leftEdge);
+		board[11][1] = new Cell("Ball Room", blank);
+		board[12][1] = new Cell("Ball Room", blank);
+		board[13][1] = new Cell("Ball Room", rightEdge);
 		board[14][1] = new Cell("Hallway", hallway);
 		board[15][1] = new Cell("Hallway", hallway);
 		board[16][1] = new Cell("Hallway", hallway);
@@ -98,14 +105,14 @@ public class Board {
 		board[5][2] = new Cell("Kitchen", rightEdge);
 		board[6][2] = new Cell("Hallway", hallway);
 		board[7][2] = new Cell("Hallway", hallway);
-		board[8][2] = new Cell("Ballroom", topLeftCorner);
-		board[9][2] = new Cell("Ballroom", topEdge);
-		board[10][2] = new Cell("Ballroom", blank);
-		board[11][2] = new Cell("Ballroom", blank);
-		board[12][2] = new Cell("Ballroom", blank);
-		board[13][2] = new Cell("Ballroom", blank);
-		board[14][2] = new Cell("Ballroom", topEdge);
-		board[15][2] = new Cell("Ballroom", topRightCorner);
+		board[8][2] = new Cell("Ball Room", topLeftCorner);
+		board[9][2] = new Cell("Ball Room", topEdge);
+		board[10][2] = new Cell("Ball Room", blank);
+		board[11][2] = new Cell("Ball Room", blank);
+		board[12][2] = new Cell("Ball Room", blank);
+		board[13][2] = new Cell("Ball Room", blank);
+		board[14][2] = new Cell("Ball Room", topEdge);
+		board[15][2] = new Cell("Ball Room", topRightCorner);
 		board[16][2] = new Cell("Hallway", hallway);
 		board[17][2] = new Cell("Hallway", hallway);
 		board[18][2] = new Cell("Conservatory", leftEdge);
@@ -122,14 +129,14 @@ public class Board {
 		board[5][3] = new Cell("Kitchen", rightEdge);
 		board[6][3] = new Cell("Hallway", hallway);
 		board[7][3] = new Cell("Hallway", hallway);
-		board[8][3] = new Cell("Ballroom", leftEdge);
-		board[9][3] = new Cell("Ballroom", blank);
-		board[10][3] = new Cell("Ballroom", blank);
-		board[11][3] = new Cell("Ballroom", blank);
-		board[12][3] = new Cell("Ballroom", blank);
-		board[13][3] = new Cell("Ballroom", blank);
-		board[14][3] = new Cell("Ballroom", blank);
-		board[15][3] = new Cell("Ballroom", rightEdge);
+		board[8][3] = new Cell("Ball Room", leftEdge);
+		board[9][3] = new Cell("Ball Room", blank);
+		board[10][3] = new Cell("Ball Room", blank);
+		board[11][3] = new Cell("Ball Room", blank);
+		board[12][3] = new Cell("Ball Room", blank);
+		board[13][3] = new Cell("Ball Room", blank);
+		board[14][3] = new Cell("Ball Room", blank);
+		board[15][3] = new Cell("Ball Room", rightEdge);
 		board[16][3] = new Cell("Hallway", hallway);
 		board[17][3] = new Cell("Hallway", hallway);
 		board[18][3] = new Cell("Conservatory", leftEdge);
@@ -146,14 +153,14 @@ public class Board {
 		board[5][4] = new Cell("Kitchen", rightEdge);
 		board[6][4] = new Cell("Hallway", hallway);
 		board[7][4] = new Cell("Hallway", hallway);
-		board[8][4] = new Cell("Ballroom", leftEdge);
-		board[9][4] = new Cell("Ballroom", blank);
-		board[10][4] = new Cell("Ballroom", new char[] {'a','B','a',' ',' '});
-		board[11][4] = new Cell("Ballroom", new char[] {'a','l','l',' ',' '});
-		board[12][4] = new Cell("Ballroom", new char[] {'a','r','o',' ',' '});
-		board[13][4] = new Cell("Ballroom", new char[] {'a','o','m',' ',' '});
-		board[14][4] = new Cell("Ballroom", blank);
-		board[15][4] = new Cell("Ballroom", rightEdge);
+		board[8][4] = new Cell("Ball Room", leftEdge);
+		board[9][4] = new Cell("Ball Room", blank);
+		board[10][4] = new Cell("Ball Room", new char[] {'a','B','a',' ',' '});
+		board[11][4] = new Cell("Ball Room", new char[] {'a','l','l',' ',' '});
+		board[12][4] = new Cell("Ball Room", new char[] {'a','r','o',' ',' '});
+		board[13][4] = new Cell("Ball Room", new char[] {'a','o','m',' ',' '});
+		board[14][4] = new Cell("Ball Room", blank);
+		board[15][4] = new Cell("Ball Room", rightEdge);
 		board[16][4] = new Cell("Hallway", hallway);
 		board[17][4] = new Cell("Hallway", hallway);
 		board[18][4] = new Cell("Conservatory", conservatoryDoor);
@@ -170,14 +177,14 @@ public class Board {
 		board[5][5] = new Cell("Kitchen", rightEdge);
 		board[6][5] = new Cell("Hallway", hallway);
 		board[7][5] = new Cell("Hallway", hallway);
-		board[8][5] = new Cell("Ballroom", verticalDoor);
-		board[9][5] = new Cell("Ballroom", blank);
-		board[10][5] = new Cell("Ballroom", blank);
-		board[11][5] = new Cell("Ballroom", blank);
-		board[12][5] = new Cell("Ballroom", blank);
-		board[13][5] = new Cell("Ballroom", blank);
-		board[14][5] = new Cell("Ballroom", blank);
-		board[15][5] = new Cell("Ballroom", verticalDoor);
+		board[8][5] = new Cell("Ball Room", verticalDoor);
+		board[9][5] = new Cell("Ball Room", blank);
+		board[10][5] = new Cell("Ball Room", blank);
+		board[11][5] = new Cell("Ball Room", blank);
+		board[12][5] = new Cell("Ball Room", blank);
+		board[13][5] = new Cell("Ball Room", blank);
+		board[14][5] = new Cell("Ball Room", blank);
+		board[15][5] = new Cell("Ball Room", verticalDoor);
 		board[16][5] = new Cell("Hallway", hallway);
 		board[17][5] = new Cell("Hallway", hallway);
 		board[18][5] = new Cell("Hallway", hallway);
@@ -194,14 +201,14 @@ public class Board {
 		board[5][6] = new Cell("Kitchen", bottomRightCorner);
 		board[6][6] = new Cell("Hallway", hallway);
 		board[7][6] = new Cell("Hallway", hallway);
-		board[8][6] = new Cell("Ballroom", leftEdge);
-		board[9][6] = new Cell("Ballroom", blank);
-		board[10][6] = new Cell("Ballroom", blank);
-		board[11][6] = new Cell("Ballroom", blank);
-		board[12][6] = new Cell("Ballroom", blank);
-		board[13][6] = new Cell("Ballroom", blank);
-		board[14][6] = new Cell("Ballroom", blank);
-		board[15][6] = new Cell("Ballroom", rightEdge);
+		board[8][6] = new Cell("Ball Room", leftEdge);
+		board[9][6] = new Cell("Ball Room", blank);
+		board[10][6] = new Cell("Ball Room", blank);
+		board[11][6] = new Cell("Ball Room", blank);
+		board[12][6] = new Cell("Ball Room", blank);
+		board[13][6] = new Cell("Ball Room", blank);
+		board[14][6] = new Cell("Ball Room", blank);
+		board[15][6] = new Cell("Ball Room", rightEdge);
 		board[16][6] = new Cell("Hallway", hallway);
 		board[17][6] = new Cell("Hallway", hallway);
 		board[18][6] = new Cell("Hallway", hallway);
@@ -218,14 +225,14 @@ public class Board {
 		board[5][7] = new Cell("Hallway", hallway);
 		board[6][7] = new Cell("Hallway", hallway);
 		board[7][7] = new Cell("Hallway", hallway);
-		board[8][7] = new Cell("Ballroom", bottomLeftCorner);
-		board[9][7] = new Cell("Ballroom", horizontalDoor);
-		board[10][7] = new Cell("Ballroom", bottomEdge);
-		board[11][7] = new Cell("Ballroom", bottomEdge);
-		board[12][7] = new Cell("Ballroom", bottomEdge);
-		board[13][7] = new Cell("Ballroom", bottomEdge);
-		board[14][7] = new Cell("Ballroom", horizontalDoor);
-		board[15][7] = new Cell("Ballroom", bottomRightCorner);
+		board[8][7] = new Cell("Ball Room", bottomLeftCorner);
+		board[9][7] = new Cell("Ball Room", horizontalDoor);
+		board[10][7] = new Cell("Ball Room", bottomEdge);
+		board[11][7] = new Cell("Ball Room", bottomEdge);
+		board[12][7] = new Cell("Ball Room", bottomEdge);
+		board[13][7] = new Cell("Ball Room", bottomEdge);
+		board[14][7] = new Cell("Ball Room", horizontalDoor);
+		board[15][7] = new Cell("Ball Room", bottomRightCorner);
 		board[16][7] = new Cell("Hallway", hallway);
 		board[17][7] = new Cell("Hallway", hallway);
 		board[18][7] = new Cell("Hallway", hallway);
@@ -673,6 +680,12 @@ public class Board {
 		System.out.print("\n");
 	}
 	
+	/**
+	 * get cell at given row and column
+	 * @param row
+	 * @param col (column)
+	 * @return
+	 */
 	public Cell getCell(int x, int y) {
 		return board[x][y];
 	}

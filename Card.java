@@ -2,8 +2,8 @@
 public class Card {
 	private String type;
 	private String id;
-	private int startX;
-	private int startY;
+	private int startRow;
+	private int startCol;
 	private char[] initials;
 	
 	public Card(String type, String id) {
@@ -11,11 +11,11 @@ public class Card {
 		this.id = id;
 	}
 	
-	public Card(String type, String id, int startX, int startY, char[] initials) {
+	public Card(String type, String id, int startRow, int startCol, char[] initials) {
 		this.type = type;
 		this.id = id;
-		this.startX = startX;
-		this.startY = startY;
+		this.startRow = startRow;
+		this.startCol = startCol;
 		this.initials = initials;
 	}
 
@@ -27,12 +27,12 @@ public class Card {
 		return id;
 	}
 
-	public int getStartX() {
-		return startX;
+	public int getStartRow() {
+		return startRow;
 	}
 
-	public int getStartY() {
-		return startY;
+	public int getStartCol() {
+		return startCol;
 	}
 
 	public char[] getInitials() {
