@@ -7,7 +7,7 @@ public class Player {
 	private boolean dead;
 	private String prevRoundRoom;
 	private char[] initials;
-	
+
 	public Player (String character, Cell location, char[] initials) {
 		this.name = character;
 		this.hand = new ArrayList<Card>();
@@ -40,14 +40,14 @@ public class Player {
 	public void addCardToHand(Card card) {
 		this.hand.add(card);
 	}
-	
+
 	/**
 	 * sets the current location of the player
 	 */
 	public void setLocation(Cell loc) {
 		this.location = loc;
 	}
-	
+
 	/**
 	 * returns the current location of the player
 	 * @return the current location of this player
@@ -55,7 +55,7 @@ public class Player {
 	public Cell getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * returns the playable state of the player
 	 * @return the status of this player
@@ -63,14 +63,14 @@ public class Player {
 	public boolean getStatus() {
 		return dead;
 	}
-	
+
 	/**
 	 * sets this player to be 'dead'
 	 */
 	public void kill() {
 		dead = true;
 	}
-	
+
 	public String getPrevRoundRoom() {
 		return prevRoundRoom;
 	}
@@ -78,7 +78,7 @@ public class Player {
 	public void setPrevRoundRoom(String prevRoundRoom) {
 		this.prevRoundRoom = prevRoundRoom;
 	}
-	
+
 	public char[] getPlayerInitials() {
 		return this.initials;
 	}

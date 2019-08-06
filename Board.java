@@ -4,7 +4,7 @@ public class Board {
 	private Cell board[][];
 	public Map<String, Cell[]> roomDoors;
 	public Map<String, Cell[]> roomStore;
-	
+
 	public Board () {
 		roomDoors = new HashMap<String, Cell[]>();
 		roomStore = new HashMap<String, Cell[]>();
@@ -23,10 +23,10 @@ public class Board {
 	 * different types of char arrays used to determine what is
 	 * drawn on the board are defined, and then creates Cells, which
 	 * the Board holds in a 2D Array of 24 x 25.
-	 * @param board contains the cells and when the 
+	 * @param board contains the cells and when the
 	 * draw method is called on it, draws the cells.
 	 */
-	
+
 	public void constructBoard() {
 		board = new Cell[24][25];
 		char[] hallway = {'a', '⌈','⌉','⌊','⌋'};
@@ -560,8 +560,8 @@ public class Board {
 		board[2][21] = new Cell("Lounge", new char[] {'a',' ',' ','L','o'});
 		board[3][21] = new Cell("Lounge", new char[] {'a',' ',' ','u','n'});
 		board[4][21] = new Cell("Lounge", new char[] {'a',' ',' ','g','e'});
-		
-		
+
+
 		board[5][21] = new Cell("Lounge", blank);
 		board[6][21] = new Cell("Lounge", rightEdge);
 		board[7][21] = new Cell("Hallway", hallway);
@@ -682,7 +682,39 @@ public class Board {
 		}
 		System.out.print("\n");
 	}
-	
+
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		for (int j = 0; j < 25; j++) {
+			builder.append(System.getProperty("line.separator"));
+			Boolean lineSecond = false; //used by the program to determine if this is the first or second line of the cell being drawn
+			for (int i = 0; i < 24; i++) {
+				Cell cell = board[i][j];
+				char[] draw;
+				if(cell.hasPlayer()) {
+					draw = cell.getPlayerInit();
+				}
+				else {
+					draw = cell.getDraw();
+				}
+				if (lineSecond == false) {
+					builder.append(draw[1]);
+					builder.append(draw[2]);
+					}
+				else {
+					builder.append(draw[3]);
+					builder.append(draw[4]);
+				}
+				if (i == 23 && lineSecond == false) {
+					builder.append(System.getProperty("line.separator"));
+					i = -1;
+					lineSecond = true;
+				}
+			}
+		}
+		return builder.toString();
+	}
+
 	/**
 	 * get cell at given row and column
 	 * @param row
@@ -692,7 +724,7 @@ public class Board {
 	public Cell getCell(int x, int y) {
 		return board[x][y];
 	}
-	
+
 	/**
 	 * stores the positions of exiting door for each room for when a player exits a room
 	 */
@@ -707,7 +739,6 @@ public class Board {
 		roomDoors.put("Lounge", new Cell[] {board[6][18]});
 		roomDoors.put("Study", new Cell[] {board[17][20]});
 	}
-	
 	public void setStoreLocations() {
 		roomStore.put("Conservatory", new Cell[] {board[19][3],board[20][3],board[21][3],board[22][3],board[20][4],board[21][4]});
 		roomStore.put("Ball Room", new Cell[] {board[10][5],board[12][5],board[11][6],board[10][2],board[12][2],board[11][1]});

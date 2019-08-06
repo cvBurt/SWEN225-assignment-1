@@ -5,12 +5,12 @@ public class Card {
 	private int startRow;
 	private int startCol;
 	private char[] initials;
-	
+
 	public Card(String type, String id) {
 		this.type = type;
 		this.id = id;
 	}
-	
+
 	public Card(String type, String id, int startRow, int startCol, char[] initials) {
 		this.type = type;
 		this.id = id;
@@ -39,4 +39,3 @@ public class Card {
 		return initials;
 	}
 }
-

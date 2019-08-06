@@ -75,37 +75,37 @@ public class Cell {
 			this.westNeighbour = false;
 		}
 		else if (draw[0] == 'k'){ // allows neighbour only in the left direction
-			this.northNeighbour = false; 
+			this.northNeighbour = false;
 			this.eastNeighbour = false;
 			this.southNeighbour = false;
 			this.westNeighbour = true;
 		}
 		else if (draw[0] == 'l'){ // doesn't allow neighbour in the right direction
-			this.northNeighbour = true; 
+			this.northNeighbour = true;
 			this.eastNeighbour = false;
 			this.southNeighbour = true;
-			this.westNeighbour = false;
+			this.westNeighbour = true;
 		}
 		else if (draw[0] == 'm'){ // doesn't allow neighbour in the left direction
-			this.northNeighbour = true; 
+			this.northNeighbour = true;
 			this.eastNeighbour = true;
 			this.southNeighbour = true;
 			this.westNeighbour = false;
 		}
 		else if (draw[0] == 'n'){ // doesn't allow neighbour in the up direction
-			this.northNeighbour = false; 
+			this.northNeighbour = false;
 			this.eastNeighbour = true;
 			this.southNeighbour = true;
 			this.westNeighbour = true;
 		}
 		else if (draw[0] == '0'){ // doesn't allow neighbour in the down direction
-			this.northNeighbour = true; 
+			this.northNeighbour = true;
 			this.eastNeighbour = true;
 			this.southNeighbour = false;
 			this.westNeighbour = true;
 		}
-		
-		
+
+
 		this.room = room;
 		this.occupied = false;
 	}
@@ -137,7 +137,7 @@ public class Cell {
 	public char[] getDraw() {
 		return draw;
 	}
-	
+
 	public boolean hasPlayer() {
 		return this.occupied;
 	}
@@ -146,15 +146,15 @@ public class Cell {
 		this.player = player;
 		occupied = true;
 	}
-	
+
 	public char[] getPlayerInit() {
 		return player;
 	}
-	
+
 	public void removePlayer() {
 		occupied = false;
 	}
-	
+
 	public void setPos(int row,int col) {
 		this.x = col;
 		this.y = row;
@@ -163,7 +163,7 @@ public class Cell {
 	public int getX() {
 		return y;
 	}
-	
+
 	public int getY() {
 		return x;
 	}
