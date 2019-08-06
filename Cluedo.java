@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 
 public class Cluedo {
@@ -45,6 +46,7 @@ public class Cluedo {
 		//}
 		for(int i=0; i<noPlayers; i++) {
 			Card character = characters.get(i);
+			System.out.println(character.getStartRow() +","+character.getStartCol());
 			Cell startPos = board.getCell(character.getStartRow(), character.getStartCol());
 			Player toAdd = new Player(character.getId(), startPos, character.getInitials());
 			startPos.setPlayer(character.getInitials());
@@ -434,9 +436,35 @@ public class Cluedo {
 	
 	public void checkForHelp(Scanner sc) {
 		if(sc.nextInt() == 4) {
-			
+			System.out.print("Every character, weapon and room is represented by a card in the game. Before the game starts, one\n" + 
+					"character, one weapon, and one room card are selected at random by the program. This selection represents\n" + 
+					"the murder circumstances, i.e., the “solution” that players need to figure out during game play.\n" + 
+					"The remaining weapon, room and character cards are then randomly distributed to the players.\n" + 
+					"Some players may end up with more cards than others. At the start of the game, each player is asked\n" +
+					"to look at their hand, while the other players look away. As the only other time a player's cards are\n"+
+					"when a suggestion is made, each player should take note of what they have."+
+					"\n" + 
+					"Players then take it in turns to roll from 2-12 and type the direction the player wants to move\n" + 
+					"in, equal to the total rolled. Diagonal movement is not allowed and no space may be used\n" + 
+					"twice during one turn. When a player enters a room, they do not need to use any remaining moves\n" + 
+					"they have left. They may then hypothesise about the murder circumstances by making a suggestion\n" + 
+					"which comprises the room they are in, a character and a weapon. This is typed in the fashion of (character),(weapon),(room).\n" + 
+					"If the character and weapon named in the suggestion are not in that room yet, they are now moved into the room.\n" + 
+					"When a suggestion is made, the program checks, in a clockwise fashion, starting from the current player,\n" + 
+					"for players who can refute the suggestion. A suggestion is refuted by producing a card that matches one of\n" + 
+					"the named murder circumstances (as such a card cannot be in the solution envelope). A refutation\n" + 
+					"has all the other players look away from the screen while the player shows the card which matches. If a player has\n" + 
+					"multiple refutation cards, it is their choice which one they pick. If no player can produce a refutation, the named\n" + 
+					"murder circumstances are a potential solution candidate that may or may not be used to make an accusation\n" + 
+					"later on (by any player).\n" + 
+					"\n" + 
+					"An accusation comprises a character, a weapon, and a room (which can be any room, not just the\n" + 
+					"one the player making the accusation may be in). It is typed in the exact same way as a suggestion.\n" + 
+					"If the accusation made by a player exactly matches the actual murder circumstances (the program checks\n" + 
+					"if the accusation and solution match) the player wins, otherwise the player is excluded from making\n" + 
+					"further suggestions or accusations. This means the player will continue to refute suggestions by others\n" +
+					"but cannot win the game anymore.\n");}
 		}
-	}
 	
 	/**
 	 * finds which player can refute the suggested person
