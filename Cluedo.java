@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.*;
 
 public class Cluedo {
@@ -46,7 +45,6 @@ public class Cluedo {
 		//}
 		for(int i=0; i<noPlayers; i++) {
 			Card character = characters.get(i);
-			System.out.println(character.getStartRow() +","+character.getStartCol());
 			Cell startPos = board.getCell(character.getStartRow(), character.getStartCol());
 			Player toAdd = new Player(character.getId(), startPos, character.getInitials());
 			startPos.setPlayer(character.getInitials());
@@ -194,7 +192,7 @@ public class Cluedo {
 	
 	public void validateMove(Scanner sc, int roll) {
 		String[] move;
-		List<String> validMoves = new ArrayList<String>(List.of("n","e","s","w"));
+		List<String> validMoves = new ArrayList<String>(Arrays.asList("n","e","s","w"));
 		while(true) {
 			if(sc.nextLine() != null) {
 				boolean validMove = true;
