@@ -1,20 +1,25 @@
 import java.util.*;
 
+import javax.swing.ImageIcon;
+
 public class Cell {
 	Boolean northNeighbour;
 	Boolean eastNeighbour;
 	Boolean southNeighbour;
 	Boolean westNeighbour;
 	String room;
+	ImageIcon pic;
 	char[] draw;
 	boolean occupied;
 	boolean isExit;
-	char[] player;
-	char[] exit;
+	Player player;
+	ImageIcon exit;
 	int x;
 	int y;
+	boolean redHighlight;
+	boolean greenHighlight;
 
-	public Cell(String room, char[] draw) {
+	public Cell(String room, char[] draw, ImageIcon pic) {
 		this.draw = draw;
 		if (draw[0] == 'a') { // allows neighbours in all directions
 			this.northNeighbour = true;
@@ -106,10 +111,11 @@ public class Cell {
 			this.southNeighbour = false;
 			this.westNeighbour = true;
 		}
-		
-		
+		this.pic = pic;
 		this.room = room;
 		this.occupied = false;
+		this.redHighlight = false;
+		this.greenHighlight = false;
 	}
 
 	public Boolean getNorthNeighbour() {
@@ -140,16 +146,20 @@ public class Cell {
 		return draw;
 	}
 	
+	public ImageIcon getPic() {
+		return pic;
+	}
+	
 	public boolean hasPlayer() {
 		return this.occupied;
 	}
 
-	public void setPlayer(char[] player) {
+	public void setPlayer(Player player) {
 		this.player = player;
 		occupied = true;
 	}
 	
-	public char[] getPlayerInit() {
+	public Player getPlayer() {
 		return player;
 	}
 	
@@ -157,12 +167,12 @@ public class Cell {
 		occupied = false;
 	}
 	
-	public void setExit(char[] exit) {
+	public void setExit(ImageIcon exit) {
 		this.exit = exit;
 		this.isExit = true;
 	}
 	
-	public char[] getExit() {
+	public ImageIcon getExit() {
 		return exit;
 	}
 	
@@ -185,5 +195,28 @@ public class Cell {
 	
 	public int getY() {
 		return x;
+	}
+	
+	public boolean isRedHighlight() {
+		return redHighlight;
+	}
+	
+	public boolean isGreenHighlight() {
+		return greenHighlight;
+	}
+	
+	public void setRedHighLight() {
+		redHighlight = true;
+		greenHighlight = false;
+	}
+	
+	public void setGreenHighlight() {
+		greenHighlight = true;
+		redHighlight = false;
+	}
+	
+	public void removeHighlight() {
+		greenHighlight = false;
+		redHighlight = false;
 	}
 }
